@@ -1,0 +1,166 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:midroadmechanic/adminpage/admin.dart';
+import 'package:flutter/rendering.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+class AdminLogin extends StatefulWidget {
+  static const String id = 'adminlogin';
+  const AdminLogin({Key? key}) : super(key: key);
+
+  @override
+  _AdminLoginState createState() => _AdminLoginState();
+}
+
+class _AdminLoginState extends State<AdminLogin> {
+  TextEditingController _mailcontroller = TextEditingController();
+  TextEditingController _passcontroller = TextEditingController();
+  final _auth = FirebaseAuth.instance;
+  bool _showPassword = false;
+  bool showSpinner = false;
+  String email='';
+  String password='';
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar:AppBar(
+          centerTitle: true,
+          title: Text('ADMIN LOGIN'),
+          backgroundColor: Colors.lightBlueAccent,
+        ),
+        body: SafeArea(
+          child: Center(
+            child: SingleChildScrollView(
+                child:Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        'assets/image/admin.png',
+                        height: 230,
+                        width: 220,
+                      ),
+                      const SizedBox(
+                        height:20.0,
+                      ),
+                      TextField(
+                        controller: _mailcontroller,
+                        keyboardType: TextInputType.emailAddress,
+                        onChanged: (value){
+                          email = value;
+                        },
+                        decoration: const InputDecoration(
+                            prefixIcon: Icon(Icons.mail),
+                            hintText: 'Mail',
+                            enabledBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color:Colors.black),
+                            )
+                        ),
+                      ),
+                      const SizedBox(
+                        height:20.0,
+                      ),
+                      TextField(
+                        controller: _passcontroller,
+                        obscureText:!_showPassword,
+                        onChanged: (value){
+                          password = value;
+                        },
+                        decoration: InputDecoration(
+                            hintText: 'Password',
+                            prefixIcon: Icon(Icons.lock),
+                            suffixIcon: IconButton(
+                              icon:Icon(Icons.remove_red_eye,
+                                color:this._showPassword?Colors.blue:Colors.grey,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  this._showPassword = !this._showPassword;
+                                });
+                              },
+                            ),
+                            enabledBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color:Colors.black),
+                            )
+                        ),
+                      ),
+
+                      const SizedBox(
+                        height: 1.0,
+                      ),
+                      const SizedBox(
+                        height: 10.5,
+                      ),
+
+                      SizedBox(
+                        height:60,
+                        width:350,
+                        child:(
+                            ElevatedButton(
+                              onPressed: () async{
+                                setState((){
+                                  showSpinner =true;
+                                });
+                                try{
+                                  UserCredential user = await _auth.signInWithEmailAndPassword(
+                                      email: email, password: password);
+                                  var userdet = await FirebaseFirestore.instance.collection('admin').doc(email).get();
+                                  if (user != null && userdet.exists) {
+                                    Navigator.pushNamed(context, AdminPage.id);
+                                  }
+                                  else{
+                                    invalidlogin();
+                                  }
+                                  setState(() {
+                                    showSpinner = false;
+                                  });
+                                }
+                                catch(e){
+                                  showDialog(context: context, builder: (BuildContext context) =>(AlertDialog(
+                                    title: const Text("ERROR!"),
+                                    content:  Text(e.toString()),
+                                    actions: [
+                                      new FlatButton(
+                                        child: const Text("Ok"),
+                                        onPressed: () => Navigator.pop(context),
+                                      ),
+                                    ],
+                                  ))
+                                  );print(e);
+                                }
+                                _mailcontroller.clear();
+                                _passcontroller.clear();
+                              },
+                              style: ElevatedButton.styleFrom(primary: Colors.blue,onPrimary: Colors.white),
+                              child: const Text('SIGN IN',
+                                  style:TextStyle(
+                                    fontSize: 30,
+                                  )
+                              ),
+                            )
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+            ),
+          ),
+        )
+    );
+  }
+  invalidlogin(){
+    showDialog(context: context, builder: (BuildContext context) =>(AlertDialog(
+      title: const Text("ALERT!"),
+      content: const Text('Invalid UserName or Password'),
+      actions: [
+        new FlatButton(
+          child: const Text("Ok"),
+          onPressed: () => Navigator.pop(context),
+        ),
+      ],
+      backgroundColor: Colors.transparent,
+    ))
+    );
+  }
+}

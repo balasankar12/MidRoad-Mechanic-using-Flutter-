@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "52799498563",
+    "project_id": "mid-road-mechanic-754c0",
+    "storage_bucket": "mid-road-mechanic-754c0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:52799498563:android:412808ac50ef624df527f6",
+        "android_client_info": {
+          "package_name": "com.example.midroadmechanic"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "52799498563-n5aosk56b410bbb9ck78jqej1vqb73ri.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.midroadmechanic",
+            "certificate_hash": "2eb7ea3e336a7f72d9f7715abe983c7d44c5e5bf"
+          }
+        },
+        {
+          "client_id": "52799498563-me1dq2p13nk14i18p73e8035ftggi6ci.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAgP8ppJrZgubg4k1S-2zKz7yPWPZbcJvw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "52799498563-me1dq2p13nk14i18p73e8035ftggi6ci.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
